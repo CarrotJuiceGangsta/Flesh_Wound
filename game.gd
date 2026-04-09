@@ -2,6 +2,10 @@ extends Node
 
 const BAMBOO_RING = preload("uid://c540rjjt0ewjh")
 const DIAMOND_RING = preload("uid://guhq4mubk0pr")
+const FLOWER_RING = preload("uid://b3hwix1pm08dm")
+const GOLD_RING = preload("uid://dikicfnmindx8")
+
+
 
 var current_score = 0
 
@@ -15,8 +19,8 @@ var item_3
 
 var slot_1 = BAMBOO_RING
 var slot_2 = DIAMOND_RING
-var slot_3 = BAMBOO_RING
-var slot_4 = DIAMOND_RING
+var slot_3 = FLOWER_RING
+var slot_4 = GOLD_RING
 
 var inventory_space = 5
 
