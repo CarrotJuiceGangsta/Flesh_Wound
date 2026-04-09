@@ -82,18 +82,22 @@ func key_pressing():
 	elif needed_keys.size() - 1 >= current_needed_key:
 		if Input.is_action_just_pressed(needed_keys[current_needed_key]):
 			Game.current_score += 1
-			if current_needed_key == 0:
-				if Game.slot_1.trigger == Game.slot_1.triggers.HIT:
-					Game.slot_1.action()
-			elif current_needed_key == 1:
-				if Game.slot_2.trigger == Game.slot_2.triggers.HIT:
-					Game.slot_2.action()
-			elif current_needed_key == 2:
-				if Game.slot_3.trigger == Game.slot_3.triggers.HIT:
-					Game.slot_3.action()
-			elif current_needed_key == 3:
-				if Game.slot_4.trigger == Game.slot_4.triggers.HIT:
-					Game.slot_4.action()
+			if Game.slot_1 != null:
+				if current_needed_key == 0:
+					if Game.slot_1.trigger == Game.slot_1.triggers.HIT:
+						Game.slot_1.action()
+			if Game.slot_2 != null:
+				if current_needed_key == 2:
+					if Game.slot_2.trigger == Game.slot_2.triggers.HIT:
+						Game.slot_2.action()
+			if Game.slot_3 != null:
+				if current_needed_key == 4:
+					if Game.slot_3.trigger == Game.slot_3.triggers.HIT:
+						Game.slot_3.action()
+			if Game.slot_4 != null:
+				if current_needed_key == 6:
+					if Game.slot_4.trigger == Game.slot_4.triggers.HIT:
+						Game.slot_4.action()
 			
 			current_needed_key += 1
 			current_key_needed_label.text = needed_keys[current_needed_key]
@@ -117,12 +121,32 @@ func enemies():
 
 
 func _on_timer_timeout() -> void:
-	if Game.slot_1.trigger == Game.slot_1.triggers.ROUND:
-		Game.slot_1.action()
-	if Game.slot_2.trigger == Game.slot_2.triggers.ROUND:
-		Game.slot_2.action()
-	if Game.slot_3.trigger == Game.slot_3.triggers.ROUND:
-		Game.slot_3.action()
-	if Game.slot_4.trigger == Game.slot_4.triggers.ROUND:
-		Game.slot_4.action()
+	if Game.slot_1 != null:
+		if Game.slot_1.activations >= Game.slot_1.activation_time:
+			Game.slot_1.death_activations += 1
+		Game.slot_1.activations += 1
+		if Game.slot_1.trigger == Game.slot_1.triggers.ROUND:
+			Game.slot_1.action()
+
+	if Game.slot_2 != null:
+		if Game.slot_2.activations >= Game.slot_2.activation_time:
+			Game.slot_2.death_activations += 1
+		Game.slot_2.activations += 1
+		if Game.slot_2.trigger == Game.slot_2.triggers.ROUND:
+			Game.slot_2.action()
+
+	if Game.slot_3 != null:
+		if Game.slot_3.activations >= Game.slot_3.activation_time:
+			Game.slot_3.death_activations += 1
+		Game.slot_3.activations += 1
+		if Game.slot_3.trigger == Game.slot_3.triggers.ROUND:
+			Game.slot_3.action()
+
+	if Game.slot_4 != null:
+		if Game.slot_4.activations >= Game.slot_4.activation_time:
+			Game.slot_4.death_activations += 1
+		Game.slot_4.activations += 1
+		if Game.slot_4.trigger == Game.slot_4.triggers.ROUND:
+			Game.slot_4.action()
+
 	get_tree().change_scene_to_file("res://scenes/win_lose_screen.tscn")
