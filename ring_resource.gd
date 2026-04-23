@@ -16,6 +16,7 @@ class_name ring_type
 @export var activation_time : int
 @export var death_time : int
 
+var trigger_text : String
 var activations = 0
 var death_activations = 0
 var dead = false
@@ -43,8 +44,10 @@ func action():
 		if death_activations < death_time or !dies:
 			if reward == rewards.CURRENCY:
 				Game.currency += reward_amount
+				trigger_text = "+" + str(reward_amount) + " coins"
 			if reward == rewards.POINTS:
 				Game.current_score += reward_amount
+				trigger_text = "+" + str(reward_amount) + " points"
 			if scales == true:
 				reward_amount += 1
 		else:
