@@ -11,6 +11,7 @@ const WIN_LOSE_SCREEN : PackedScene = preload("uid://dy145eblj1p3m")
 @onready var current_score_label: Label = $CanvasLayer/CurrentScoreHbox/CurrentScoreLabel
 @onready var timer_label: Label = $CanvasLayer/TimerHbox/TimerLabel
 @onready var timer: Timer = $Timer
+@onready var reward_label: Label = $RewardLabel
 
 
 var needed_keys = []
@@ -86,18 +87,22 @@ func key_pressing():
 				if current_needed_key == 0:
 					if Game.slot_1.trigger == Game.slot_1.triggers.HIT:
 						Game.slot_1.action()
+						reward_label.text = Game.slot_1.trigger_text
 			if Game.slot_2 != null:
 				if current_needed_key == 2:
 					if Game.slot_2.trigger == Game.slot_2.triggers.HIT:
 						Game.slot_2.action()
+						reward_label.text = Game.slot_2.trigger_text
 			if Game.slot_3 != null:
 				if current_needed_key == 4:
 					if Game.slot_3.trigger == Game.slot_3.triggers.HIT:
 						Game.slot_3.action()
+						reward_label.text = Game.slot_3.trigger_text
 			if Game.slot_4 != null:
 				if current_needed_key == 6:
 					if Game.slot_4.trigger == Game.slot_4.triggers.HIT:
 						Game.slot_4.action()
+						reward_label.text = Game.slot_4.trigger_text
 			
 			current_needed_key += 1
 			current_key_needed_label.text = needed_keys[current_needed_key]
