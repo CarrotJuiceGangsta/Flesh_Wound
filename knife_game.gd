@@ -2,6 +2,8 @@ extends Node2D
 
 const WIN_LOSE_SCREEN : PackedScene = preload("uid://dy145eblj1p3m")
 
+@onready var knife_game_anim: AnimatedSprite2D = $KnifeGameAnim
+
 @onready var current_key_needed_label: Label = $CanvasLayer/NeededKeyHbox/CurrentKeyNeededLabel
 @onready var currency_amount_label: Label = $CurrencyAmountLabel
 @onready var needed_keys_label: Label = $CanvasLayer/NeededKeysHbox/NeededKeysLabel
@@ -12,6 +14,17 @@ const WIN_LOSE_SCREEN : PackedScene = preload("uid://dy145eblj1p3m")
 @onready var timer_label: Label = $CanvasLayer/TimerHbox/TimerLabel
 @onready var timer: Timer = $Timer
 @onready var reward_label: Label = $RewardLabel
+@onready var combo_timer: Timer = $ComboTimer
+@onready var combo_timer_label: Label = $Label
+
+
+var default_combo_time = 5
+var default_combo_increase = 5
+var combo_time : float
+var combo_scaling = 4
+var combo_decrease : float
+var combo_increase : float
+
 
 
 var needed_keys = []
@@ -32,11 +45,14 @@ var already_ran = false
 
 
 func _ready() -> void:
+	combo_increase = default_combo_increase
+	combo_time = default_combo_time
+	combo_timer.wait_time = combo_time
+	combo_timer.start()
 	Game.current_score = 0
 	randomize_keys()
 	enemies()
 	
-	currency_amount_label.text = str(Game.currency)
 	needed_score_label.text = str(needed_score)
 	current_score_label.text = str(Game.current_score)
 	current_ante_label.text = str(Game.ante)
@@ -44,6 +60,8 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
+	combo_timer_label.text = str(snappedf(combo_timer.time_left, 0.01))
+	currency_amount_label.text = str(Game.currency)
 	timer_label.text = str(timer.time_left)
 	if Game.current_score >= needed_score and !already_ran:
 		if Game.current_round != 3:
@@ -79,31 +97,53 @@ func key_pressing():
 	if current_needed_key == needed_keys_length:
 		current_needed_key = 0
 		randomize_keys()
+		combo_decrease = combo_increase / combo_scaling
+		combo_increase -= combo_decrease
+		combo_timer.wait_time = combo_timer.time_left + combo_increase
+		combo_timer.stop()
+		combo_timer.start()
 
 	elif needed_keys.size() - 1 >= current_needed_key:
 		if Input.is_action_just_pressed(needed_keys[current_needed_key]):
+
 			Game.current_score += 1
-			if Game.slot_1 != null:
-				if current_needed_key == 0:
+			if current_needed_key == 0:
+				knife_game_anim.play("stab_index")
+				if Game.slot_1 != null:
 					if Game.slot_1.trigger == Game.slot_1.triggers.HIT:
 						Game.slot_1.action()
 						reward_label.text = Game.slot_1.trigger_text
-			if Game.slot_2 != null:
-				if current_needed_key == 2:
+
+			if current_needed_key == 2:
+				knife_game_anim.play("stab_middle")
+				if Game.slot_2 != null:
 					if Game.slot_2.trigger == Game.slot_2.triggers.HIT:
 						Game.slot_2.action()
 						reward_label.text = Game.slot_2.trigger_text
-			if Game.slot_3 != null:
-				if current_needed_key == 4:
+
+			if current_needed_key == 4:
+				knife_game_anim.play("stab_ring")
+				if Game.slot_3 != null:
 					if Game.slot_3.trigger == Game.slot_3.triggers.HIT:
 						Game.slot_3.action()
 						reward_label.text = Game.slot_3.trigger_text
-			if Game.slot_4 != null:
-				if current_needed_key == 6:
+
+			if current_needed_key == 6:
+				knife_game_anim.play("stab_pinky")
+				if Game.slot_4 != null:
 					if Game.slot_4.trigger == Game.slot_4.triggers.HIT:
 						Game.slot_4.action()
 						reward_label.text = Game.slot_4.trigger_text
-			
+
+			if needed_keys[current_needed_key] == "space":
+				if current_needed_key == 1:
+					knife_game_anim.play_backwards("stab_index")
+				if current_needed_key == 3:
+					knife_game_anim.play_backwards("stab_middle")
+				if current_needed_key == 5:
+					knife_game_anim.play_backwards("stab_ring")
+				if current_needed_key == 7:
+					knife_game_anim.play_backwards("stab_pinky")
 			current_needed_key += 1
 			current_key_needed_label.text = needed_keys[current_needed_key]
 
@@ -155,3 +195,10 @@ func _on_timer_timeout() -> void:
 			Game.slot_4.action()
 
 	get_tree().change_scene_to_file("res://scenes/win_lose_screen.tscn")
+
+
+func _on_combo_timer_timeout() -> void:
+	print("combo end")
+	combo_increase = default_combo_increase
+	combo_timer.wait_time = default_combo_time
+	combo_timer.start()
