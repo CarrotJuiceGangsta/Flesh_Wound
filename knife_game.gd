@@ -16,11 +16,12 @@ const WIN_LOSE_SCREEN : PackedScene = preload("uid://dy145eblj1p3m")
 @onready var reward_label: Label = $RewardLabel
 @onready var combo_timer: Timer = $ComboTimer
 @onready var combo_timer_label: Label = $Label
+@onready var speed_timer: Timer = $SpeedTimer
 
 
+var default_speed_timer = 5
 var default_combo_time = 5
 var default_combo_increase = 5
-var combo_time : float
 var combo_scaling = 4
 var combo_decrease : float
 var combo_increase : float
@@ -46,8 +47,7 @@ var already_ran = false
 
 func _ready() -> void:
 	combo_increase = default_combo_increase
-	combo_time = default_combo_time
-	combo_timer.wait_time = combo_time
+	combo_timer.wait_time = default_combo_time
 	combo_timer.start()
 	Game.current_score = 0
 	randomize_keys()
@@ -109,40 +109,44 @@ func key_pressing():
 			Game.current_score += 1
 			if current_needed_key == 0:
 				knife_game_anim.play("stab_index")
-				if Game.slot_1 != null:
-					if Game.slot_1.trigger == Game.slot_1.triggers.HIT:
-						Game.slot_1.action()
-						reward_label.text = Game.slot_1.trigger_text
+				if Game.inv_slot_1 != null:
+					if Game.inv_slot_1.trigger == Game.inv_slot_1.triggers.HIT:
+						Game.inv_slot_1.action()
+						reward_label.text = Game.inv_slot_1.trigger_text
 
 			if current_needed_key == 2:
 				knife_game_anim.play("stab_middle")
-				if Game.slot_2 != null:
-					if Game.slot_2.trigger == Game.slot_2.triggers.HIT:
-						Game.slot_2.action()
-						reward_label.text = Game.slot_2.trigger_text
+				if Game.inv_slot_2 != null:
+					if Game.inv_slot_2.trigger == Game.inv_slot_2.triggers.HIT:
+						Game.inv_slot_2.action()
+						reward_label.text = Game.inv_slot_2.trigger_text
 
 			if current_needed_key == 4:
 				knife_game_anim.play("stab_ring")
-				if Game.slot_3 != null:
-					if Game.slot_3.trigger == Game.slot_3.triggers.HIT:
-						Game.slot_3.action()
-						reward_label.text = Game.slot_3.trigger_text
+				if Game.inv_slot_3 != null:
+					if Game.inv_slot_3.trigger == Game.inv_slot_3.triggers.HIT:
+						Game.inv_slot_3.action()
+						reward_label.text = Game.inv_slot_3.trigger_text
 
 			if current_needed_key == 6:
 				knife_game_anim.play("stab_pinky")
-				if Game.slot_4 != null:
-					if Game.slot_4.trigger == Game.slot_4.triggers.HIT:
-						Game.slot_4.action()
-						reward_label.text = Game.slot_4.trigger_text
+				if Game.inv_slot_4 != null:
+					if Game.inv_slot_4.trigger == Game.inv_slot_4.triggers.HIT:
+						Game.inv_slot_4.action()
+						reward_label.text = Game.inv_slot_4.trigger_text
 
 			if needed_keys[current_needed_key] == "space":
 				if current_needed_key == 1:
+					knife_game_anim.stop()
 					knife_game_anim.play_backwards("stab_index")
 				if current_needed_key == 3:
+					knife_game_anim.stop()
 					knife_game_anim.play_backwards("stab_middle")
 				if current_needed_key == 5:
+					knife_game_anim.stop()
 					knife_game_anim.play_backwards("stab_ring")
 				if current_needed_key == 7:
+					knife_game_anim.stop()
 					knife_game_anim.play_backwards("stab_pinky")
 			current_needed_key += 1
 			current_key_needed_label.text = needed_keys[current_needed_key]
@@ -166,35 +170,35 @@ func enemies():
 
 
 func _on_timer_timeout() -> void:
-	if Game.slot_1 != null:
-		if Game.slot_1.activations >= Game.slot_1.activation_time:
-			Game.slot_1.death_activations += 1
-		Game.slot_1.activations += 1
-		if Game.slot_1.trigger == Game.slot_1.triggers.ROUND:
-			Game.slot_1.action()
+	if Game.inv_slot_1 != null:
+		if Game.inv_slot_1.activations >= Game.inv_slot_1.activation_time:
+			Game.inv_slot_1.death_activations += 1
+		Game.inv_slot_1.activations += 1
+		if Game.inv_slot_1.trigger == Game.inv_slot_1.triggers.ROUND:
+			Game.inv_slot_1.action()
 
-	if Game.slot_2 != null:
-		if Game.slot_2.activations >= Game.slot_2.activation_time:
-			Game.slot_2.death_activations += 1
-		Game.slot_2.activations += 1
-		if Game.slot_2.trigger == Game.slot_2.triggers.ROUND:
-			Game.slot_2.action()
+	if Game.inv_slot_2 != null:
+		if Game.inv_slot_2.activations >= Game.inv_slot_2.activation_time:
+			Game.inv_slot_2.death_activations += 1
+		Game.inv_slot_2.activations += 1
+		if Game.inv_slot_2.trigger == Game.inv_slot_2.triggers.ROUND:
+			Game.inv_slot_2.action()
 
-	if Game.slot_3 != null:
-		if Game.slot_3.activations >= Game.slot_3.activation_time:
-			Game.slot_3.death_activations += 1
-		Game.slot_3.activations += 1
-		if Game.slot_3.trigger == Game.slot_3.triggers.ROUND:
-			Game.slot_3.action()
+	if Game.inv_slot_3 != null:
+		if Game.inv_slot_3.activations >= Game.inv_slot_3.activation_time:
+			Game.inv_slot_3.death_activations += 1
+		Game.inv_slot_3.activations += 1
+		if Game.inv_slot_3.trigger == Game.inv_slot_3.triggers.ROUND:
+			Game.inv_slot_3.action()
 
-	if Game.slot_4 != null:
-		if Game.slot_4.activations >= Game.slot_4.activation_time:
-			Game.slot_4.death_activations += 1
-		Game.slot_4.activations += 1
-		if Game.slot_4.trigger == Game.slot_4.triggers.ROUND:
-			Game.slot_4.action()
+	if Game.inv_slot_4 != null:
+		if Game.inv_slot_4.activations >= Game.inv_slot_4.activation_time:
+			Game.inv_slot_4.death_activations += 1
+		Game.inv_slot_4.activations += 1
+		if Game.inv_slot_4.trigger == Game.inv_slot_4.triggers.ROUND:
+			Game.inv_slot_4.action()
 
-	get_tree().change_scene_to_file("res://scenes/win_lose_screen.tscn")
+	get_tree().change_scene_to_file(Game.WIN_LOSE_SCREEN)
 
 
 func _on_combo_timer_timeout() -> void:
