@@ -85,29 +85,30 @@ func _on_back_button_pressed() -> void:
 
 
 func _on_buy_area_area_entered(area: Area2D) -> void:
-	if area.owner.ring.cost <= Game.currency:
-		if Game.inv_slot_1 == null:
-			Game.inv_slot_1 = area.owner.ring
-			print("inv slot 1: " + str(Game.inv_slot_1))
-			Game.currency -= area.owner.ring.cost
+	if area.owner != Control:
+		if area.owner.ring.cost <= Game.currency:
+			if Game.inv_slot_1 == null:
+				Game.inv_slot_1 = area.owner.ring
+				print("inv slot 1: " + str(Game.inv_slot_1))
+				Game.currency -= area.owner.ring.cost
 
-		elif Game.inv_slot_2 == null:
-			Game.inv_slot_2 = area.owner.ring
-			print("inv slot 2: " + str(Game.inv_slot_2))
-			Game.currency -= area.owner.ring.cost
+			elif Game.inv_slot_2 == null:
+				Game.inv_slot_2 = area.owner.ring
+				print("inv slot 2: " + str(Game.inv_slot_2))
+				Game.currency -= area.owner.ring.cost
 
-		elif Game.inv_slot_3 == null:
-			Game.inv_slot_3 = area.owner.ring
-			print("inv slot 3: " + str(Game.inv_slot_3))
-			Game.currency -= area.owner.ring.cost
+			elif Game.inv_slot_3 == null:
+				Game.inv_slot_3 = area.owner.ring
+				print("inv slot 3: " + str(Game.inv_slot_3))
+				Game.currency -= area.owner.ring.cost
 
-		elif Game.inv_slot_4 == null:
-			Game.inv_slot_4 = area.owner.ring
-			print("inv slot 4: " + str(Game.inv_slot_4))
-			Game.currency -= area.owner.ring.cost
+			elif Game.inv_slot_4 == null:
+				Game.inv_slot_4 = area.owner.ring
+				print("inv slot 4: " + str(Game.inv_slot_4))
+				Game.currency -= area.owner.ring.cost
 
+			else:
+				print("Inventory Full!")
 		else:
-			print("Inventory Full!")
-	else:
-		print("Your Broke!")
-	currency_amount_label.text = str(Game.currency)
+			print("Your Broke!")
+		currency_amount_label.text = str(Game.currency)
